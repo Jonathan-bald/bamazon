@@ -10,15 +10,14 @@ const connection = mysql.createConnection({
     database: "bamazon"
 });
 
-// connect to the mysql server and sql database
 connection.connect(function(err) {
     if (err) throw err
-        // run the displayInventory function after the connection is made to prompt the user
+
     displayInventory()
 });
 
 let displayInventory = () => {
-    //console.log("SQL Connection Established")
+
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err
         for (let i = 0; i < res.length; i++) {
@@ -31,7 +30,7 @@ let displayInventory = () => {
     })
 };
 
-// validateInput makes sure that the user is supplying only positive integers for their inputs
+
 let validateInput = (value) => {
     var integer = Number.isInteger(parseFloat(value))
     var sign = Math.sign(value)
@@ -43,7 +42,7 @@ let validateInput = (value) => {
     }
 }
 
-// purchase function to prompt the customer for an item to purchase
+
 let purchase = () => {
     inquirer.prompt([{
                 type: "input",
@@ -74,18 +73,17 @@ let purchase = () => {
                     displayInventory()
                 } else {
 
-                    // set the results to the variable of productInfo
                     let productInfo = res[0]
 
                     if (quantity <= productInfo.stock_quantity) {
                         console.log(productInfo.product_name + "is in stock! Placing order now!")
                         console.log("\n")
 
-                        // the updating query string
+                        
                         var updateQueryStr = "UPDATE products SET stock_quantity = " + (productInfo.stock_quantity - quantity) + " WHERE item_id = " + item
-                            // console.log('updateQueryStr = ' + updateQueryStr);
+                            
 
-                        // Update the inventory
+                        
                         connection.query(updateQueryStr, function(err, data) {
                             if (err) throw err;
 
@@ -96,7 +94,7 @@ let purchase = () => {
                             console.log("To shop again with us please input 'node bamazonCustomer.js' into your command line again.")
                             console.log("\n")
 
-                            // End the database connection and close the app
+                            
                             connection.end();
                         })
                     } else {
@@ -105,7 +103,7 @@ let purchase = () => {
                         console.log("Please modify your order or select another item.")
                         console.log("\n")
 
-                        // After 3 seconds display the inventory again so that the customer can make a new selcetion.
+                        
                         setTimeout(function() { displayInventory() }, 3000)
                     }
 
